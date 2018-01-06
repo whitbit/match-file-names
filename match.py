@@ -65,7 +65,11 @@ def find_matches_by_url(csv_data, matches_dict):
     for i in range(len(csv_data)):
         url = csv_data[i][1]
         if url in ALL_URLS:
-            matches_dict[i] = matches_dict.get(i) + ', ' + ALL_URLS[url]
+            if i in matches_dict:
+                matches_dict[i] = matches_dict.get(i) + ',' + ALL_URLS[url]
+            else:
+                matches_dict.setdefault(i, ALL_URLS[url])
+            
 
     return matches_dict
 
@@ -86,33 +90,11 @@ def find_matches_by_name(csv_data):
     return matches
 
 
-
-
-# def find_matches_by_
-# def get_companies_to_revalidate():
-
-# def find_unmatched_by_name(csv_file, json_file):
-
-#     unmatched = []
-#     csv_data = get_csv_data(csv_file)
-#     json_data = get_json_data(json_file)
-
-#     for i in range(1, len(csv_data)):
-#         for company in json_data:
-#             if csv_data[i][0] != company['name'] and csv_data[i] not in unmatched:
-#                 unmatched.append(csv_data[i])
-
-#     return unmatched
-
-# print find_unmatched_by_name('crm.csv', 'db.json')
-
 def write_matches(file, csv_file):
 
     csv_data = get_csv_data(csv_file)
-    print len(csv_data)
 
     list_of_matches = find_matches_by_name(csv_data)
-    print list_of_matches
 
     url_name_matches = find_matches_by_url(csv_data, list_of_matches)
 
@@ -120,14 +102,11 @@ def write_matches(file, csv_file):
         results_file.write('Matches')
         for i in range(len(csv_data)):
             if i in url_name_matches:
-                print i
                 results_file.write(url_name_matches[i] + '\n')
             else:
                 results_file.write('\n')
+
         
 set_up_data('db.json')
-
-
-
 
 write_matches('company_matches.txt', 'crm1.csv')
