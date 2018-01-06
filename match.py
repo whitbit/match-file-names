@@ -8,9 +8,7 @@ def get_csv_data(file):
     with open(file) as csvfile:
         companies = csv.reader(csvfile)
         return [company for company in companies]
-        # return len(companies)
-
-print get_csv_data('crm.csv')
+        
 
 def get_json_data(file):
     """
@@ -21,11 +19,22 @@ def get_json_data(file):
         companies = json.load(jsonfile)
     return companies
 
-print get_json_data('db.json')[0]['name']
+def find_matches_by_name(csv_file, json_file):
 
-def find_matches(csv_file, json_file):
-    pass
+    matches = []
+    
+    csv_data = get_csv_data(csv_file)
 
+    json_data = get_json_data(json_file)
+
+    for i in range(1, len(csv_data)):
+        for company in json_data:
+            if csv_data[i][0] == company['name']:
+                matches.append(csv_data[i][0])
+
+    return matches
+
+print find_matches_by_name('crm.csv', 'db.json')
 
 def write_matches(file):
 
