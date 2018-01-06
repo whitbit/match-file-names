@@ -60,9 +60,7 @@ def set_up_data(json_file):
     
     return
 
-def find_matches_by_url(csv_file, matches_dict):
-
-    csv_data = get_csv_data(csv_file)
+def find_matches_by_url(csv_data, matches_dict):
 
     for i in range(len(csv_data)):
         url = csv_data[i][1]
@@ -72,7 +70,7 @@ def find_matches_by_url(csv_file, matches_dict):
     return matches_dict
 
 
-def find_matches_by_name(csv_file):
+def find_matches_by_name(csv_data):
     """
     Matches names based on name property of json.
 
@@ -80,9 +78,6 @@ def find_matches_by_name(csv_file):
 
     matches = {}
     
-    csv_data = get_csv_data(csv_file)
-
-
     for i in range(len(csv_data)):
         company_name = csv_data[i][0]
         if company_name in ALL_NAMES:
@@ -113,17 +108,19 @@ def find_matches_by_name(csv_file):
 
 def write_matches(file, csv_file):
 
-    list_of_matches = find_matches_by_name(csv_file)
-    print list_of_matches
-    # { 1: id }
+    csv_data = get_csv_data(csv_file)
+    print len(csv_data)
 
-    url_name_matches = find_matches_by_url(csv_file, list_of_matches)
-    print url_name_matches
+    list_of_matches = find_matches_by_name(csv_data)
+    print list_of_matches
+
+    url_name_matches = find_matches_by_url(csv_data, list_of_matches)
 
     with open(file, 'w') as results_file:
-        results_file.write('Matches \n')
-        for i in range(len(url_name_matches)):
+        results_file.write('Matches')
+        for i in range(len(csv_data)):
             if i in url_name_matches:
+                print i
                 results_file.write(url_name_matches[i] + '\n')
             else:
                 results_file.write('\n')
